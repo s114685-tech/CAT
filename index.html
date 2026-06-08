@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8">
+  <title>MBTI 貓咪測驗</title>
+  <style>
+    body { font-family: Arial, sans-serif; background: #fdf6e3; color: #333; text-align: center; }
+    h1 { color: #ff6f61; }
+    .question { margin: 20px; }
+    button { margin: 5px; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer; }
+    button:hover { background-color: #ffcccb; }
+    #result { margin-top: 30px; font-size: 1.2em; font-weight: bold; }
+    .cat { font-size: 1.1em; color: #444; margin-top: 10px; }
+    img { margin-top: 15px; max-width: 300px; border-radius: 10px; }
+  </style>
+</head>
+<body>
+  <h1>🐱 MBTI 貓咪測驗 🐱</h1>
+  <div id="quiz"></div>
+  <div id="result"></div>
+
+  <script>
+    const questions = [
+      { q: "週末你更喜歡：", a: ["和朋友一起出去玩", "在家安靜休息"], type: "EI" },
+      { q: "學習新知識時：", a: ["注意細節與事實", "理解概念與可能性"], type: "SN" },
+      { q: "朋友遇到問題時：", a: ["提供理性分析", "給予情感支持"], type: "TF" },
+      { q: "安排行程時：", a: ["提前規劃", "隨性彈性"], type: "JP" },
+      { q: "分享想法時：", a: ["直接清楚", "用故事比喻"], type: "TF" },
+      { q: "團隊合作時：", a: ["專注完成任務", "注重人際和諧"], type: "JP" },
+      { q: "壓力大時：", a: ["找方法解決", "需要陪伴支持"], type: "TF" },
+      { q: "學習偏好：", a: ["有明確步驟", "自由探索"], type: "SN" },
+      { q: "遇到新同學：", a: ["主動打招呼", "等對方先開口"], type: "EI" },
+      { q: "未來規劃：", a: ["設定明確目標", "保持開放隨機應變"], type: "JP" },
+      { q: "需要創意時：", a: ["從現實經驗中尋找靈感", "從想像與可能性中獲得靈感"], type: "SN" },
+      { q: "意見不同時：", a: ["強調邏輯與事實", "注重感受與和諧"], type: "TF" },
+      { q: "時間管理：", a: ["制定明確計劃並遵守", "保持彈性隨時調整"], type: "JP" },
+      { q: "大型聚會中：", a: ["主動參與並認識新朋友", "找安靜角落或熟悉的人"], type: "EI" },
+      { q: "接收新資訊時：", a: ["注重具體細節", "尋找背後的模式與意義"], type: "SN" },
+      { q: "重大選擇時：", a: ["依靠理性分析", "考慮人際情感"], type: "TF" }
+    ];
+
+    let scores = {E:0,I:0,S:0,N:0,T:0,F:0,J:0,P:0};
+    let current = 0;
+
+    function showQuestion() {
+      if (current < questions.length) {
+        const q = questions[current];
+        document.getElementById("quiz").innerHTML = `
+          <div class="question">
+            <p>${q.q}</p>
+            <button onclick="choose(0)">${q.a[0]}</button>
+            <button onclick="choose(1)">${q.a[1]}</button>
+          </div>
+        `;
+      } else {
+        calculateResult();
+      }
+    }
+
+    function choose(choice) {
+      const q = questions[current];
+      if (q.type === "EI") choice === 0 ? scores.E++ : scores.I++;
+      if (q.type === "SN") choice === 0 ? scores.S++ : scores.N++;
+      if (q.type === "TF") choice === 0 ? scores.T++ : scores.F++;
+      if (q.type === "JP") choice === 0 ? scores.J++ : scores.P++;
+      current++;
+      showQuestion();
+    }
+
+    function calculateResult() {
+      let type = "";
+      type += scores.E >= scores.I ? "E" : "I";
+      type += scores.S >= scores.N ? "S" : "N";
+      type += scores.T >= scores.F ? "T" : "F";
+      type += scores.J >= scores.P ? "J" : "P";
+
+      const mapping = {
+        "INTJ": {cat:"豹貓", img:"INTJ-豹貓.jpg"},
+        "INTP": {cat:"英短", img:"INTP-英短貓.jpg"},
+        "ENTJ": {cat:"虎斑", img:"ENTJ-虎斑貓.jpg"},
+        "ENTP": {cat:"橘貓", img:"ENTP-橘貓.jpg"},
+        "INFJ": {cat:"金漸層", img:"INFJ-金漸層貓.jpg"},
+        "INFP": {cat:"波斯貓", img:"INFP-波斯貓.jpg"},
+        "ENFJ": {cat:"美短", img:"ENFJ-美短貓.jpg"},
+        "ENFP": {cat:"銀漸層", img:"ENFP-銀漸層貓.jpg"},
+        "ISTJ": {cat:"孟買貓", img:"ISTJ-孟買貓.jpg"},
+        "ISFJ": {cat:"暹羅貓", img:"ISFJ-暹羅貓.jpg"},
+        "ESTJ": {cat:"緬因貓", img:"ESTJ-緬因貓.jpg"},
+        "ESFJ": {cat:"挪威森林貓", img:"ESFJ-挪威森林貓.jpg"},
+        "ISTP": {cat:"德文捲毛貓", img:"ISTP-德文捲毛貓.jpg"},
+        "ISFP": {cat:"布偶貓", img:"ISFP-布偶貓.jpg"},
+        "ESTP": {cat:"加菲貓", img:"ESTP-加菲貓.jpg"},
+        "ESFP": {cat:"金吉拉", img:"ESFP-金吉拉貓.jpg"}
+      };
+
+      const result = mapping[type] || {cat:"混種貓", img:"default-cat.jpg"};
+
+      document.getElementById("quiz").innerHTML = "";
+      document.getElementById("result").innerHTML = `
+        你的 MBTI 類型是 <b>${type}</b><br>
+        <div class="cat">對應的貓咪：${result.cat}</div>
+        <img src="${result.img}" alt="${result.cat}">
+      `;
+    }
+
+    showQuestion();
+  </script>
+</body>
+</html>
